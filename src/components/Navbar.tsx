@@ -18,6 +18,7 @@ export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false)
     const [activeSection, setActiveSection] = useState('')
     const { theme, toggleTheme } = useTheme()
+    const isDark = theme === 'dark'
 
     useEffect(() => {
         const handleScroll = () => {
@@ -40,53 +41,54 @@ export default function Navbar() {
         const id = href.replace('#', '')
         const el = document.getElementById(id)
         if (el) {
-            const top = el.getBoundingClientRect().top + window.scrollY - 90
+            // Offset: navbar height (80px) + small buffer (8px)
+            const top = el.getBoundingClientRect().top + window.scrollY - 88
             window.scrollTo({ top, behavior: 'smooth' })
         }
     }
-
-    const isDark = theme === 'dark'
 
     return (
         <motion.nav
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-                    ? 'bg-[var(--nav-bg)] backdrop-blur-xl border-b border-[var(--nav-border)] shadow-[0_4px_30px_rgba(0,0,0,0.2)]'
-                    : 'bg-transparent'
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'backdrop-blur-xl border-b shadow-lg' : 'bg-transparent'
                 }`}
+            style={scrolled ? {
+                backgroundColor: 'var(--nav-bg)',
+                borderColor: 'var(--nav-border)',
+                boxShadow: '0 4px 30px rgba(0,0,0,0.15)',
+            } : {}}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-20">
+                <div className="flex items-center justify-between h-[72px]">
+
                     {/* AK Logo */}
                     <motion.button
                         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                        className="flex items-center gap-3 group cursor-pointer"
+                        className="flex items-center gap-3 group cursor-pointer shrink-0"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold text-lg text-white shadow-[0_0_20px_rgba(108,99,255,0.4)] group-hover:shadow-[0_0_30px_rgba(108,99,255,0.7)] transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold text-base text-white shadow-[0_0_20px_rgba(108,99,255,0.4)] group-hover:shadow-[0_0_30px_rgba(108,99,255,0.7)] transition-shadow">
                             AK
-                            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary to-accent opacity-0 group-hover:opacity-30 blur-md transition-opacity" />
                         </div>
                     </motion.button>
 
                     {/* Desktop Links */}
-                    <div className="hidden lg:flex items-center gap-0.5">
+                    <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
                         {navLinks.map((link) => (
                             <button
                                 key={link.href}
                                 onClick={() => handleNavClick(link.href)}
-                                className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${activeSection === link.href.replace('#', '')
-                                        ? 'text-white dark:text-white'
-                                        : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-                                    }`}
+                                style={{ color: activeSection === link.href.replace('#', '') ? 'var(--text-primary)' : 'var(--text-muted)' }}
+                                className="relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:opacity-100"
                             >
                                 {activeSection === link.href.replace('#', '') && (
                                     <motion.span
                                         layoutId="activeNav"
-                                        className="absolute inset-0 bg-primary/15 rounded-lg border border-primary/30"
+                                        className="absolute inset-0 rounded-lg border border-primary/30"
+                                        style={{ backgroundColor: 'rgba(108,99,255,0.12)' }}
                                         transition={{ type: 'spring', bounce: 0.25, duration: 0.4 }}
                                     />
                                 )}
@@ -95,13 +97,27 @@ export default function Navbar() {
                         ))}
                     </div>
 
-                    {/* Right: Theme Toggle + CTA + Mobile Menu */}
-                    <div className="flex items-center gap-2">
-                        {/* Theme Toggle */}
+                    {/* Right: Hire Me → Theme Toggle → Mobile Hamburger */}
+                    <div className="flex items-center gap-2 shrink-0">
+                        <motion.a
+                            href="mailto:akeesak15@gmail.com"
+                            className="hidden md:block glow-button text-sm px-5 py-2"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            Hire Me
+                        </motion.a>
+
+                        {/* Theme Toggle — AFTER Hire Me */}
                         <motion.button
                             onClick={toggleTheme}
                             aria-label="Toggle theme"
-                            className="relative w-10 h-10 rounded-xl border border-[var(--nav-border)] bg-[var(--card-bg)] flex items-center justify-center text-[var(--text-muted)] hover:text-primary hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_15px_rgba(108,99,255,0.2)]"
+                            className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300"
+                            style={{
+                                border: '1px solid var(--border-color)',
+                                backgroundColor: 'var(--card-bg)',
+                                color: 'var(--text-muted)',
+                            }}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                         >
@@ -113,23 +129,15 @@ export default function Navbar() {
                                     exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
                                     transition={{ duration: 0.2 }}
                                 >
-                                    {isDark ? <FiSun size={16} /> : <FiMoon size={16} />}
+                                    {isDark ? <FiSun size={16} className="text-yellow-400" /> : <FiMoon size={16} className="text-indigo-600" />}
                                 </motion.div>
                             </AnimatePresence>
                         </motion.button>
 
-                        <motion.a
-                            href="mailto:akeesak15@gmail.com"
-                            className="hidden md:block glow-button text-sm px-5 py-2"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            Hire Me
-                        </motion.a>
-
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}
-                            className="lg:hidden text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors p-2"
+                            className="lg:hidden p-2 rounded-lg transition-colors"
+                            style={{ color: 'var(--text-muted)' }}
                         >
                             {menuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
                         </button>
@@ -144,9 +152,10 @@ export default function Navbar() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="lg:hidden bg-[var(--nav-bg)] backdrop-blur-xl border-t border-[var(--nav-border)] overflow-hidden"
+                        className="lg:hidden backdrop-blur-xl border-t overflow-hidden"
+                        style={{ backgroundColor: 'var(--nav-bg)', borderColor: 'var(--nav-border)' }}
                     >
-                        <div className="px-4 py-6 flex flex-col gap-1">
+                        <div className="px-4 py-5 flex flex-col gap-1">
                             {navLinks.map((link, i) => (
                                 <motion.button
                                     key={link.href}
@@ -154,14 +163,24 @@ export default function Navbar() {
                                     animate={{ x: 0, opacity: 1 }}
                                     transition={{ delay: i * 0.04 }}
                                     onClick={() => handleNavClick(link.href)}
-                                    className="text-left px-4 py-3 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-primary/10 transition-all text-sm"
+                                    className="text-left px-4 py-3 rounded-xl transition-all text-sm"
+                                    style={{ color: 'var(--text-muted)' }}
                                 >
                                     {link.label}
                                 </motion.button>
                             ))}
-                            <a href="mailto:akeesak15@gmail.com" className="glow-button text-center mt-3 text-sm">
-                                Hire Me
-                            </a>
+                            <div className="flex items-center gap-2 mt-3">
+                                <a href="mailto:akeesak15@gmail.com" className="glow-button text-center flex-1 text-sm">
+                                    Hire Me
+                                </a>
+                                <button
+                                    onClick={toggleTheme}
+                                    className="w-12 h-12 rounded-xl flex items-center justify-center border"
+                                    style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg)' }}
+                                >
+                                    {isDark ? <FiSun size={18} className="text-yellow-400" /> : <FiMoon size={18} className="text-indigo-600" />}
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
                 )}
