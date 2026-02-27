@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { FiAward, FiCalendar, FiBook } from 'react-icons/fi'
+import { FiCalendar, FiBook } from 'react-icons/fi'
 
 const education = [
     {
@@ -10,15 +10,17 @@ const education = [
         period: 'Feb 2024 – Nov 2025',
         icon: FiBook,
         color: '#6C63FF',
-        type: 'Diploma',
+        type: 'HND',
+        description: 'Studied software engineering fundamentals, full-stack development, data science, and agile methodologies.',
     },
     {
         degree: 'Certificate in Information Technology & English',
         institution: 'BCAS Campus Kalmunai',
         period: '2022',
-        icon: FiAward,
+        icon: FiBook,
         color: '#43E97B',
         type: 'Certificate',
+        description: 'Completed a combined programme covering IT fundamentals, web basics, networking, and professional English.',
     },
     {
         degree: 'G.C.E. Advanced Level – ICT Stream',
@@ -27,37 +29,7 @@ const education = [
         icon: FiBook,
         color: '#FF6584',
         type: 'A/Levels',
-    },
-]
-
-const certifications = [
-    {
-        title: 'Web Design for Beginners',
-        issuer: 'University of Moratuwa',
-        date: 'Feb 2026',
-        id: 'Na0FQzxYYM',
-        color: '#6C63FF',
-    },
-    {
-        title: 'Python for Beginners',
-        issuer: 'University of Moratuwa',
-        date: 'Feb 2026',
-        id: '0KjbWmjl6r',
-        color: '#43E97B',
-    },
-    {
-        title: 'Certificate in Information Technology',
-        issuer: 'BCAS Campus Kalmunai',
-        date: 'Feb 2022',
-        id: 'KL/IBP/IT/16/05',
-        color: '#FF6584',
-    },
-    {
-        title: 'Certificate in English',
-        issuer: 'BCAS Campus Kalmunai',
-        date: 'Feb 2022',
-        id: 'KL/IBP/EN/16/05',
-        color: '#F5A623',
+        description: 'Studied Information & Communication Technology with focus on programming, systems analysis, and networking.',
     },
 ]
 
@@ -66,7 +38,7 @@ export default function Education() {
     const isInView = useInView(ref, { once: true, margin: '-80px' })
 
     return (
-        <section id="education" className="relative bg-darker py-28 overflow-hidden">
+        <section id="education" className="relative py-28 overflow-hidden" style={{ backgroundColor: 'var(--bg-secondary)' }}>
             <div className="absolute top-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
 
             <div ref={ref} className="section-container">
@@ -78,98 +50,54 @@ export default function Education() {
                 >
                     <span className="text-primary text-sm font-semibold tracking-widest uppercase">Background</span>
                     <h2 className="section-title mt-2">
-                        Education & <span className="gradient-text">Certifications</span>
+                        My <span className="gradient-text">Education</span>
                     </h2>
                     <p className="section-subtitle mx-auto mt-3 text-center">
-                        Academic foundation and continuous learning through certifications
+                        Academic foundation that shaped my engineering mindset
                     </p>
                 </motion.div>
 
-                <div className="grid lg:grid-cols-2 gap-12">
-                    {/* Education */}
-                    <div>
-                        <motion.h3
-                            initial={{ x: -20, opacity: 0 }}
-                            animate={isInView ? { x: 0, opacity: 1 } : {}}
-                            className="text-lg font-bold text-white mb-6 flex items-center gap-2"
+                <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                    {education.map((edu, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ y: 40, opacity: 0 }}
+                            animate={isInView ? { y: 0, opacity: 1 } : {}}
+                            transition={{ duration: 0.6, delay: i * 0.12 }}
+                            whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                            className="glass-card overflow-hidden hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)] group"
                         >
-                            <FiBook className="text-primary" /> Education
-                        </motion.h3>
-                        <div className="space-y-4">
-                            {education.map((edu, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ x: -30, opacity: 0 }}
-                                    animate={isInView ? { x: 0, opacity: 1 } : {}}
-                                    transition={{ duration: 0.6, delay: 0.1 + i * 0.1 }}
-                                    whileHover={{ x: 5 }}
-                                    className="glass-card p-5 flex items-start gap-4 hover:border-primary/30 transition-all duration-300"
-                                >
+                            {/* Top color accent */}
+                            <div className="h-1.5 w-full" style={{ background: `linear-gradient(90deg, ${edu.color}, ${edu.color}50)` }} />
+
+                            <div className="p-6">
+                                <div className="flex items-start gap-4 mb-4">
                                     <div
-                                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
+                                        className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
                                         style={{ background: `${edu.color}15`, border: `1px solid ${edu.color}30` }}
                                     >
-                                        <edu.icon size={17} style={{ color: edu.color }} />
+                                        <edu.icon size={18} style={{ color: edu.color }} />
                                     </div>
-                                    <div className="flex-1">
-                                        <span
-                                            className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded"
-                                            style={{ background: `${edu.color}15`, color: edu.color }}
-                                        >
-                                            {edu.type}
-                                        </span>
-                                        <h4 className="font-bold text-white text-sm mt-2 leading-snug">{edu.degree}</h4>
-                                        <p className="text-muted text-sm mt-1">{edu.institution}</p>
-                                        <div className="flex items-center gap-1 text-muted text-xs mt-2">
-                                            <FiCalendar size={11} /> {edu.period}
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
+                                    <span
+                                        className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full mt-1"
+                                        style={{ background: `${edu.color}15`, color: edu.color }}
+                                    >
+                                        {edu.type}
+                                    </span>
+                                </div>
 
-                    {/* Certifications */}
-                    <div>
-                        <motion.h3
-                            initial={{ x: -20, opacity: 0 }}
-                            animate={isInView ? { x: 0, opacity: 1 } : {}}
-                            className="text-lg font-bold text-white mb-6 flex items-center gap-2"
-                        >
-                            <FiAward className="text-primary" /> Certifications
-                        </motion.h3>
-                        <div className="space-y-4">
-                            {certifications.map((cert, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ x: 30, opacity: 0 }}
-                                    animate={isInView ? { x: 0, opacity: 1 } : {}}
-                                    transition={{ duration: 0.6, delay: 0.1 + i * 0.1 }}
-                                    whileHover={{ x: -5 }}
-                                    className="glass-card p-5 hover:border-primary/30 transition-all duration-300"
-                                >
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="flex-1">
-                                            <h4 className="font-bold text-white text-sm leading-snug">{cert.title}</h4>
-                                            <p className="text-muted text-sm mt-1">{cert.issuer}</p>
-                                            <div className="flex items-center gap-3 mt-2">
-                                                <span className="flex items-center gap-1 text-xs text-muted">
-                                                    <FiCalendar size={11} /> {cert.date}
-                                                </span>
-                                                <span className="text-xs text-muted/60">ID: {cert.id}</span>
-                                            </div>
-                                        </div>
-                                        <div
-                                            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                                            style={{ background: `${cert.color}15`, border: `1px solid ${cert.color}30` }}
-                                        >
-                                            <FiAward size={14} style={{ color: cert.color }} />
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
+                                <h4 className="font-bold text-sm leading-snug mb-1 group-hover:text-primary transition-colors" style={{ color: 'var(--text-primary)' }}>
+                                    {edu.degree}
+                                </h4>
+                                <p className="text-sm mb-3 font-semibold" style={{ color: edu.color }}>{edu.institution}</p>
+                                <p className="text-xs leading-relaxed mb-4" style={{ color: 'var(--text-muted)' }}>{edu.description}</p>
+
+                                <div className="flex items-center gap-1.5 text-xs pt-4 border-t" style={{ borderColor: 'var(--border-color)', color: 'var(--text-muted)' }}>
+                                    <FiCalendar size={11} /> {edu.period}
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
             </div>
         </section>
