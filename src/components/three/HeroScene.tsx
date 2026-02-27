@@ -5,7 +5,6 @@ import * as THREE from 'three'
 
 function ParticleField() {
     const ref = useRef<THREE.Points>(null!)
-    const mouse = useRef({ x: 0, y: 0 })
 
     const count = 3000
     const positions = useMemo(() => {

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { FiGithub, FiLinkedin, FiMail, FiArrowDown, FiDownload } from 'react-icons/fi'
+import { FiGithub, FiLinkedin, FiMail, FiArrowDown } from 'react-icons/fi'
 import HeroScene from '../three/HeroScene'
 
 const socialLinks = [
